@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>我们在一起的时光</title>
+    
+    <!-- 使用免费CDN字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700&family=Pacifico&display=swap" rel="stylesheet">
+    
+    <!-- 使用免费CDN图标库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6/css/all.min.css">
+    
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --text-color: #2c3e50;
+            --light-text-color: #f8f8f8;
+            --heart-color: #ff6b6b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif SC', serif;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            text-align: center;
+            max-width: 600px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            50% { transform: translate(30px, -30px) rotate(180deg); }
+        }
+
+        .title {
+            font-size: 2.5rem;
+            color: var(--text-color);
+            margin-bottom: 30px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .timer-container {
+            margin: 30px 0;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timer {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .time-block {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 15px;
+            min-width: 80px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .time-block:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+        }
+
+        .time-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--heart-color);
+            display: block;
+            font-family: 'Pacifico', cursive;
+        }
+
+        .time-label {
+            font-size: 0.9rem;
+            color: var(--text-color);
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .heart {
+            color: var(--heart-color);
+            font-size: 2rem;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            margin: 20px 0;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .message {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin: 20px 0;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .background-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .background-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            color: var(--text-color);
+        }
+
+        .control-btn:hover {
+            transform: scale(1.1);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .upload-container {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 15px;
+            z-index: 1000;
+            display: none;
+            max-width: 300px;
+        }
+
+        .upload-container.active {
+            display: block;
+        }
+
+        .upload-btn {
+            background: var(--heart-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 20px;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .timer {
+                gap: 10px;
+            }
+            
+            .time-block {
+                min-width: 60px;
+                padding: 10px;
+            }
+            
+            .time-value {
+                font-size: 1.5rem;
+            }
+            
+            .upload-container {
+                position: relative;
+                top: auto;
+                left: auto;
+                margin: 20px auto;
+            }
+            
+            .controls {
+                bottom: 10px;
+                right: 10px;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loading-text {
+            color: white;
+            font-size: 1.5rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- 加载动画 -->
+    <div class="loading" id="loading">
+        <div class="loading-text">正在加载爱情计时器...</div>
+    </div>
+
+    <!-- 背景切换按钮 -->
+    <div class="background-toggle" onclick="toggleBackground()">
+        <i class="fas fa-palette"></i> 切换背景
+    </div>
+
+    <!-- 上传控制面板 -->
+    <div class="upload-container" id="uploadContainer">
+        <h3>背景管理</h3>
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" multiple onchange="handleFileSelect(event)">
+        <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+            <i class="fas fa-upload"></i> 上传图片
+        </button>
+        <button class="upload-btn" onclick="clearCustomBackgrounds()">
+            <i class="fas fa-trash"></i> 清除自定义
+        </button>
+        <div id="uploadProgress" style="display: none;">
+            <p>上传进度: <span id="progressText">0%</span></p>
+        </div>
+    </div>
+
+    <!-- 控制按钮 -->
+    <div class="controls">
+        <div class="control-btn" onclick="toggleUpload()" title="上传背景">
+            <i class="fas fa-image"></i>
+        </div>
+        <div class="control-btn" onclick="toggleMusic()" title="背景音乐">
+            <i class="fas fa-music"></i>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1 class="title">我们在一起的时光</h1>
+        
+        <div class="heart">
+            <i class="fas fa-heart"></i>
+        </div>
+        
+        <div class="timer-container">
+            <div class="timer">
+                <div class="time-block">
+                    <span class="time-value" id="days">0</span>
+                    <div class="time-label">天</div>
+                </div>
+                <div class="time-block">
+                    <span class="time-value" id="hours">0</span>
+                    <div class="time-label">小时</div>
+                </div>
+                <div class="time-block">
+                    <span class="time-value" id="minutes">0</span>
+                    <div class="time-label">分钟</div>
+                </div>
+                <div class="time-block">
+                    <span class="time-value" id="seconds">0</span>
+                    <div class="time-label">秒</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="message">
+            从2025年9月8日13:14开始<br>
+            每一秒都是爱你的证明 💕
+        </div>
+    </div>
+
+    <script>
+        // 配置
+        const API_BASE_URL = 'http://119.91.20.202:8080';
+        const startDate = new Date('2025-09-08T13:14:00');
+        
+        // 背景配置
+        const defaultBackgrounds = [
+            'https://picsum.photos/seed/love1/1920/1080.jpg',
+            'https://picsum.photos/seed/love2/1920/1080.jpg',
+            'https://picsum.photos/seed/love3/1920/1080.jpg',
+            'https://picsum.photos/seed/romantic1/1920/1080.jpg',
+            'https://picsum.photos/seed/romantic2/1920/1080.jpg'
+        ];
+        
+        let currentBackgroundIndex = 0;
+        let isDefaultBackground = true;
+        let customBackgrounds = [];
+        let musicPlaying = false;
+
+        // 计时器
+        function updateTimer() {
+            const now = new Date();
+            const diff = now - startDate;
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days;
+            document.getElementById('hours').textContent = hours;
+            document.getElementById('minutes').textContent = minutes;
+            document.getElementById('seconds').textContent = seconds;
+        }
+
+        // 背景切换
+        function toggleBackground() {
+            isDefaultBackground = !isDefaultBackground;
+            currentBackgroundIndex = 0;
+            loadBackground();
+        }
+
+        function loadBackground() {
+            let backgrounds = isDefaultBackground ? defaultBackgrounds : customBackgrounds;
+            if (backgrounds.length === 0) {
+                backgrounds = defaultBackgrounds;
+                isDefaultBackground = true;
+            }
+            
+            const currentBg = backgrounds[currentBackgroundIndex % backgrounds.length];
+            
+            // 预加载图片
+            const img = new Image();
+            img.onload = function() {
+                document.body.style.backgroundImage = `url(${currentBg})`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                document.body.style.backgroundAttachment = 'fixed';
+            };
+            img.src = currentBg;
+            
+            currentBackgroundIndex++;
+            
+            // 每30秒切换一次背景
+            setTimeout(loadBackground, 30000);
+        }
+
+        // 上传控制
+        function toggleUpload() {
+            const container = document.getElementById('uploadContainer');
+            container.classList.toggle('active');
+        }
+
+        // 文件选择处理
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            if (files.length === 0) return;
+            
+            const progressDiv = document.getElementById('uploadProgress');
+            const progressText = document.getElementById('progressText');
+            progressDiv.style.display = 'block';
+            
+            let uploadedCount = 0;
+            customBackgrounds = [];
+            
+            Array.from(files).forEach((file, index) => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        // 使用localStorage存储图片
+                        try {
+                            const imageData = e.target.result;
+                            customBackgrounds.push(imageData);
+                            uploadedCount++;
+                            
+                            const progress = Math.round((uploadedCount / files.length) * 100);
+                            progressText.textContent = progress + '%';
+                            
+                            if (uploadedCount === files.length) {
+                                progressDiv.style.display = 'none';
+                                isDefaultBackground = false;
+                                currentBackgroundIndex = 0;
+                                loadBackground();
+                                
+                                // 保存到localStorage
+                                localStorage.setItem('customBackgrounds', JSON.stringify(customBackgrounds));
+                            }
+                        } catch (error) {
+                            console.error('保存图片失败:', error);
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
+
+        // 清除自定义背景
+        function clearCustomBackgrounds() {
+            customBackgrounds = [];
+            localStorage.removeItem('customBackgrounds');
+            isDefaultBackground = true;
+            currentBackgroundIndex = 0;
+            loadBackground();
+        }
+
+        // 音乐控制（示例）
+        function toggleMusic() {
+            musicPlaying = !musicPlaying;
+            const btn = event.currentTarget;
+            if (musicPlaying) {
+                btn.innerHTML = '<i class="fas fa-pause"></i>';
+                // 这里可以添加音频播放逻辑
+                showNotification('音乐功能开发中...');
+            } else {
+                btn.innerHTML = '<i class="fas fa-music"></i>';
+                // 这里可以添加音频暂停逻辑
+            }
+        }
+
+        // 通知提示
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                z-index: 10000;
+                font-size: 1rem;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 2000);
+        }
+
+        // 从localStorage加载自定义背景
+        function loadCustomBackgrounds() {
+            try {
+                const saved = localStorage.getItem('customBackgrounds');
+                if (saved) {
+                    customBackgrounds = JSON.parse(saved);
+                    if (customBackgrounds.length > 0) {
+                        isDefaultBackground = false;
+                    }
+                }
+            } catch (error) {
+                console.log('无法加载保存的背景');
+            }
+        }
+
+        // 获取服务器背景
+        async function loadServerBackgrounds() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/backgrounds`);
+                if (response.ok) {
+                    const backgrounds = await response.json();
+                    if (backgrounds.length > 0) {
+                        const serverBackgrounds = backgrounds.map(bg => `${API_BASE_URL}/uploads/${bg}`);
+                        // 合并服务器背景和自定义背景
+                        customBackgrounds = [...customBackgrounds, ...serverBackgrounds];
+                    }
+                }
+            } catch (error) {
+                console.log('无法加载服务器背景，使用默认背景和本地背景');
+            }
+        }
+
+        // 初始化
+        function init() {
+            // 隐藏加载动画
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+            }, 1500);
+            
+            // 启动计时器
+            updateTimer();
+            setInterval(updateTimer, 1000);
+            
+            // 加载本地保存的背景
+            loadCustomBackgrounds();
+            
+            // 尝试加载服务器背景，然后开始显示背景
+            loadServerBackgrounds().then(() => {
+                loadBackground();
+            }).catch(() => {
+                loadBackground();
+            });
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+
+        // 页面可见性改变时更新计时器
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                updateTimer();
+            }
+        });
+
+        // 键盘快捷键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                document.getElementById('uploadContainer').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
